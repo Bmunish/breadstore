@@ -92,10 +92,10 @@ function BreadCursor() {
 
 function BreadCharacter({ type }: { type: "normal" | "royal" | "superman" }) {
   return (
-    <div className="relative size-16 sm:size-20 shrink-0 select-none">
+    <div className="relative size-12 sm:size-16 shrink-0 select-none">
       {/* Superman Cape */}
       {type === "superman" && (
-        <div className="absolute -left-3 -top-1 w-10 h-14 z-0 animate-cape-flutter pointer-events-none">
+        <div className="absolute -left-2 -top-0.5 w-7 h-11 sm:w-9 sm:h-13 z-0 animate-cape-flutter pointer-events-none">
           <svg viewBox="0 0 50 70" fill="none" className="w-full h-full drop-shadow-md">
             <path d="M15 8 C5 25, 0 50, 6 68 C18 64, 30 68, 42 62 C34 42, 30 20, 26 8 Z" fill="#DC2626" />
           </svg>
@@ -161,7 +161,7 @@ function BreadCharacter({ type }: { type: "normal" | "royal" | "superman" }) {
 
         {/* Royal Crown for The Mother's Box */}
         {type === "royal" && (
-          <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20 animate-crown-float pointer-events-none w-10 sm:w-12">
+          <div className="absolute -top-3 sm:-top-4 left-1/2 -translate-x-1/2 z-20 animate-crown-float pointer-events-none w-8 sm:w-11">
             <svg viewBox="0 0 60 40" fill="none" className="w-full h-full drop-shadow-md">
               {/* Crown Base */}
               <polygon points="6,34 54,34 50,14 38,24 30,6 22,24 10,14" fill="#FBBF24" stroke="#B45309" strokeWidth="2.5" />
@@ -183,53 +183,57 @@ function BreadCharacter({ type }: { type: "normal" | "royal" | "superman" }) {
 function ProductCard({ 
   product, 
   onAdd, 
-  onBuyNow 
+  onBuyNow,
+  compact = false
 }: { 
   product: Product; 
   onAdd: (product: Product) => void; 
   onBuyNow: (product: Product) => void; 
+  compact?: boolean;
 }) {
   return (
-    <article className="product-card group flex h-full flex-col justify-between rounded-[1.6rem] border border-[#321a10]/10 bg-white/70 p-3.5 shadow-sm transition-all duration-300 hover:border-[#321a10]/25 hover:bg-white hover:shadow-xl">
-      <div>
-        <div className="relative aspect-[4/5] overflow-hidden rounded-[1.2rem] bg-[#ead9c4]">
+    <article className="product-card group flex h-full flex-col justify-between rounded-[1.4rem] border border-[#321a10]/10 bg-white/80 p-2.5 sm:p-3.5 shadow-sm transition-all duration-300 hover:border-[#321a10]/25 hover:bg-white hover:shadow-xl">
+      <div className="flex flex-col">
+        <div className="relative aspect-[4/5] overflow-hidden rounded-[1rem] sm:rounded-[1.2rem] bg-[#ead9c4]">
           <SmartImage src={product.image} alt={product.name} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
-          {product.badge && <span className="absolute left-3 top-3 rounded-full bg-[#fffaf1]/95 px-3 py-1 text-xs font-bold uppercase tracking-[.12em] text-[#321a10] shadow-sm backdrop-blur">{product.badge}</span>}
+          {product.badge && <span className="absolute left-2.5 top-2.5 rounded-full bg-[#fffaf1]/95 px-2.5 py-0.5 text-[10px] sm:text-xs font-bold uppercase tracking-[.08em] text-[#321a10] shadow-sm backdrop-blur">{product.badge}</span>}
           <button 
             type="button"
             onClick={() => onAdd(product)} 
-            className="absolute bottom-3 right-3 grid size-11 place-items-center rounded-full bg-[#321a10] text-white shadow-md transition-all hover:scale-110 hover:bg-[#d96a3b] focus-visible:outline-2 focus-visible:outline-offset-2" 
+            className="absolute bottom-2.5 right-2.5 grid size-9 sm:size-10 place-items-center rounded-full bg-[#321a10] text-white shadow-md transition-all hover:scale-110 hover:bg-[#d96a3b] focus-visible:outline-2 focus-visible:outline-offset-2" 
             aria-label={`Add ${product.name} to cart`}
           >
-            <Icon name="plus" />
+            <Icon name="plus" className="size-4" />
           </button>
         </div>
-        <div className="flex items-start justify-between gap-3 pt-3.5">
-          <div>
-            <h3 className="font-display text-xl font-bold leading-tight sm:text-2xl">{product.name}</h3>
-            <p className="mt-1 text-xs text-[#6b5549] sm:text-sm">{product.note}</p>
+        
+        {/* Name and Price on same flex row with no wrap overflow */}
+        <div className="pt-2.5 sm:pt-3 flex flex-col justify-between flex-1">
+          <div className="flex items-baseline justify-between gap-1.5">
+            <h3 className="font-display text-sm sm:text-lg font-bold leading-tight line-clamp-1 text-[#321a10]">{product.name}</h3>
+            <span className="shrink-0 font-display text-sm sm:text-lg font-black text-[#321a10]">₹{product.price}</span>
           </div>
-          <p className="shrink-0 font-display text-lg font-black sm:text-xl">₹{product.price}</p>
+          <p className="mt-1 text-[11px] sm:text-xs text-[#6b5549] line-clamp-1">{product.note}</p>
         </div>
       </div>
       
-      {/* Action Buttons: Add to Bag & Buy Now */}
-      <div className="mt-4 flex gap-2 pt-2 border-t border-[#321a10]/10">
+      {/* Action Buttons: Add to Bag & Buy Now cleanly aligned */}
+      <div className="mt-2.5 sm:mt-3 flex gap-1.5 pt-2 border-t border-[#321a10]/10">
         <button 
           type="button"
           onClick={() => onAdd(product)}
-          className="flex-1 flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-[#321a10]/25 bg-transparent px-3 text-xs font-bold transition hover:border-[#321a10] hover:bg-[#321a10] hover:text-white"
+          className="flex-1 flex min-h-8 sm:min-h-9 items-center justify-center gap-1 rounded-full border border-[#321a10]/20 bg-transparent px-1.5 py-1 text-[10px] sm:text-xs font-bold text-[#321a10] transition hover:border-[#321a10] hover:bg-[#321a10] hover:text-white"
         >
-          <Icon name="bag" className="size-4" />
-          <span>Add to Bag</span>
+          <Icon name="bag" className="size-3 sm:size-3.5 shrink-0" />
+          <span className="whitespace-nowrap">Add</span>
         </button>
         <button 
           type="button"
           onClick={() => onBuyNow(product)}
-          className="flex-1 flex min-h-10 items-center justify-center gap-1.5 rounded-full bg-[#d96a3b] px-3 text-xs font-bold text-white transition hover:bg-[#b94f29] shadow-sm"
+          className="flex-1 flex min-h-8 sm:min-h-9 items-center justify-center gap-1 rounded-full bg-[#d96a3b] px-1.5 py-1 text-[10px] sm:text-xs font-bold text-white transition hover:bg-[#b94f29] shadow-sm"
         >
-          <span>Buy Now</span>
-          <Icon name="arrow" className="size-3.5" />
+          <span className="whitespace-nowrap">Buy Now</span>
+          <Icon name="arrow" className="size-2.5 sm:size-3 shrink-0" />
         </button>
       </div>
     </article>
@@ -475,22 +479,22 @@ export default function App() {
               </div>
             </div>
 
-            {/* Mobile View: At least two horizontal top picks, then the rest in a neat vertical list/grid */}
+            {/* Mobile View: At least two horizontal top picks, then the rest in a clean 2-column grid matching top size */}
             <div className="block md:hidden">
               {/* Top 2 horizontal quick-picks */}
               <div className="mb-6">
                 <p className="text-xs font-black uppercase tracking-wider text-[#d96a3b] mb-3">🔥 Morning's Top Picks</p>
-                <div className="no-scrollbar grid grid-flow-col auto-cols-[48%] gap-3 overflow-x-auto pb-2">
+                <div className="grid grid-cols-2 gap-3 pb-2">
                   {displayed.slice(0, 2).map((p) => (
                     <ProductCard key={`h-${p.id}`} product={p} onAdd={add} onBuyNow={buyNow} />
                   ))}
                 </div>
               </div>
 
-              {/* Rest of the products presented vertically */}
+              {/* Rest of the products presented in clean 2-column mobile grid with identical compact proportions */}
               <div>
                 <p className="text-xs font-black uppercase tracking-wider text-[#321a10] mb-3">All Daily Bakes ({displayed.length - 2 > 0 ? displayed.length - 2 : displayed.length})</p>
-                <div className="grid grid-cols-1 gap-4">
+                <div className="grid grid-cols-2 gap-3">
                   {displayed.slice(2).map((p) => (
                     <ProductCard key={`v-${p.id}`} product={p} onAdd={add} onBuyNow={buyNow} />
                   ))}
@@ -554,35 +558,35 @@ export default function App() {
                 <article 
                   key={plan.name} 
                   onClick={() => setSelectedPlanIndex(index)}
-                  className={`relative flex min-h-[410px] flex-col rounded-[1.8rem] p-7 sm:p-8 transition-all duration-300 cursor-pointer ${plan.tone} ${isSelected ? 'ring-4 ring-[#d96a3b] shadow-2xl scale-[1.02]' : 'opacity-90 hover:opacity-100 hover:scale-[1.01]'}`}
+                  className={`relative flex min-h-[300px] sm:min-h-[380px] flex-col rounded-[1.4rem] sm:rounded-[1.8rem] p-5 sm:p-7 transition-all duration-300 cursor-pointer ${plan.tone} ${isSelected ? 'ring-3 sm:ring-4 ring-[#d96a3b] shadow-xl scale-[1.01]' : 'opacity-95 hover:opacity-100'}`}
                 >
-                  {plan.featured && <span className="absolute right-5 top-5 rounded-full bg-[#e9aa54] px-3 py-2 text-xs font-black uppercase tracking-[.12em] text-[#321a10]">Featured subscription</span>}
+                  {plan.featured && <span className="absolute right-4 top-4 sm:right-5 sm:top-5 rounded-full bg-[#e9aa54] px-2.5 py-1 sm:px-3 sm:py-1.5 text-[10px] sm:text-xs font-black uppercase tracking-[.12em] text-[#321a10]">Featured</span>}
                   
                   {/* Top Bar with Perk + Selected Badge */}
                   <div className="flex items-center justify-between">
-                    <p className={`text-xs font-black uppercase tracking-[.18em] ${plan.featured ? "text-[#e9aa54]" : "text-[#b84d29]"}`}>{plan.perk}</p>
+                    <p className={`text-[11px] sm:text-xs font-black uppercase tracking-[.16em] ${plan.featured ? "text-[#e9aa54]" : "text-[#b84d29]"}`}>{plan.perk}</p>
                     {isSelected && (
-                      <span className="rounded-full bg-[#d96a3b] px-3 py-1 text-xs font-bold text-white shadow-md animate-pulse">
+                      <span className="rounded-full bg-[#d96a3b] px-2.5 py-0.5 text-[10px] sm:text-xs font-bold text-white shadow-sm">
                         Selected Plan
                       </span>
                     )}
                   </div>
 
                   {/* Plan Header + Animated Bread Character */}
-                  <div className="mt-6 flex items-start justify-between gap-4">
+                  <div className="mt-4 sm:mt-5 flex items-start justify-between gap-3">
                     <div>
-                      <h3 className="font-display text-4xl font-bold leading-tight">{plan.name}</h3>
-                      <p className="mt-2 text-sm opacity-80">{plan.detail}</p>
+                      <h3 className="font-display text-2xl sm:text-4xl font-bold leading-tight">{plan.name}</h3>
+                      <p className="mt-1 sm:mt-2 text-xs sm:text-sm opacity-80">{plan.detail}</p>
                     </div>
                     {/* Animated Character Bread */}
-                    <div className="p-1">
+                    <div className="p-0.5">
                       <BreadCharacter type={plan.characterType} />
                     </div>
                   </div>
 
-                  <div className="mt-auto pt-6">
-                    <p className="font-display text-5xl font-black">{plan.price}<span className="font-sans text-sm font-normal"> / delivery</span></p>
-                    <div className="mt-6 flex flex-col gap-2">
+                  <div className="mt-auto pt-4 sm:pt-6">
+                    <p className="font-display text-3xl sm:text-5xl font-black">{plan.price}<span className="font-sans text-xs sm:text-sm font-normal"> / delivery</span></p>
+                    <div className="mt-4 sm:mt-6 flex flex-col gap-2">
                       <a 
                         href={`https://wa.me/919820046786?text=${encodeURIComponent(
                           `Hi Grain Mother! I'd like to subscribe to "${plan.name}" (${plan.price}/delivery).\n\nDetails:\n• Plan: ${plan.name}\n• Frequency: ${plan.detail}\n• Items: ${plan.breadName}\n• Perk: ${plan.perk}\n\nPlease confirm my subscription delivery schedule.`
@@ -593,7 +597,7 @@ export default function App() {
                           e.stopPropagation();
                           setSelectedPlanIndex(index);
                         }} 
-                        className={`flex w-full min-h-14 items-center justify-between rounded-full px-6 font-bold transition-all shadow-md ${
+                        className={`flex w-full min-h-11 sm:min-h-14 items-center justify-between rounded-full px-4 sm:px-6 text-xs sm:text-base font-bold transition-all shadow-md ${
                           isSelected 
                             ? "bg-[#d96a3b] text-white hover:bg-[#b94f29]" 
                             : plan.featured 
@@ -602,7 +606,7 @@ export default function App() {
                         }`}
                       >
                         <span>{isSelected ? "Subscribe with WhatsApp ✓" : "Subscribe Now"}</span>
-                        <Icon name="arrow" />
+                        <Icon name="arrow" className="size-4 sm:size-5" />
                       </a>
                     </div>
                   </div>
