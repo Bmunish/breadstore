@@ -283,8 +283,21 @@ function CartDrawer({ open, onClose, cart, setCart }: { open: boolean; onClose: 
         </div>
         {items.length > 0 && <div className="relative z-10 border-t border-[#321a10]/15 bg-[#f3e7d4]/90 p-6 backdrop-blur">
           <div className="mb-4 flex justify-between font-bold"><span>Subtotal</span><span>₹{subtotal}</span></div>
-          <button className="flex min-h-14 w-full items-center justify-center gap-2 rounded-full bg-[#d96a3b] px-6 font-bold text-white hover:bg-[#b94f29]">Checkout on WhatsApp <Icon name="arrow" /></button>
-          <p className="mt-3 text-center text-xs text-[#6b5549]">Preview only — checkout is not connected.</p>
+          <a 
+            href={`https://wa.me/919820046786?text=${encodeURIComponent(
+              "Hi Grain Mother! I'd like to place an order:\n\n" +
+              items.map((i) => `• ${i.name} x ${cart[i.id]} (₹${i.price * cart[i.id]})`).join("\n") +
+              `\n\nTotal: ₹${subtotal}\n\nPlease confirm availability and delivery slot.`
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex min-h-14 w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 font-bold text-white hover:bg-[#1faa53] transition shadow-lg"
+          >
+            <Icon name="bag" />
+            <span>Order via WhatsApp (₹{subtotal})</span>
+            <Icon name="arrow" />
+          </a>
+          <p className="mt-3 text-center text-xs text-[#6b5549]">Orders dispatched 7–9 AM · Delivered by noon across Mumbai</p>
         </div>}
       </div>
     </div>
@@ -369,8 +382,10 @@ export default function App() {
       </header>
 
       <main id="top">
-        <section className="hero-grid mx-auto grid max-w-[1440px] items-center gap-6 px-5 py-8 sm:px-8 lg:min-h-[760px] lg:grid-cols-[.88fr_1.12fr] lg:py-12">
-          <div className="relative z-10 py-4 lg:py-12">
+        {/* Mobile-optimized Hero Section */}
+        <section className="hero-grid mx-auto grid max-w-[1440px] items-center gap-6 px-4 py-6 sm:px-8 lg:min-h-[760px] lg:grid-cols-[.88fr_1.12fr] lg:py-12">
+          {/* Text & Ordering Controls (hidden on mobile, visible on desktop as requested) */}
+          <div className="relative z-10 hidden py-4 md:block lg:py-12">
             <p className="mb-6 flex items-center gap-3 text-xs font-black uppercase tracking-[.22em]"><span className="h-px w-10 bg-current" />Born in Ghatkopar · 2021</p>
             <h1 className="font-display text-[clamp(3.3rem,7vw,7.5rem)] font-black leading-[.82] tracking-[-.065em]">Bread,<br />worth the<br /><em className="font-normal text-[#d96a3b]">wait.</em></h1>
             <p className="mt-7 max-w-lg text-base leading-relaxed text-[#5f4a3e] sm:text-lg">Slow-fermented. Baked this morning. At your door by noon.</p>
@@ -389,61 +404,65 @@ export default function App() {
             </div>
             <div className="mt-10 flex gap-8 border-t border-[#321a10]/15 pt-5 text-sm"><p><strong className="block font-display text-2xl">18–24h</strong>slow ferment</p><p><strong className="block font-display text-2xl">0</strong>preservatives</p><p><strong className="block font-display text-2xl">Noon</strong>same-bake delivery</p></div>
           </div>
-          <div className="hero-visual relative min-h-[390px] overflow-hidden rounded-[2rem] bg-[#ead4b5] sm:min-h-[540px] lg:min-h-[680px]">
+
+          {/* Main Hero Photo Section */}
+          <div className="hero-visual relative min-h-[300px] overflow-hidden rounded-[2rem] bg-[#ead4b5] sm:min-h-[500px] lg:min-h-[680px]">
             <SmartImage key={heroBakes[heroIndex].image} src={heroBakes[heroIndex].image} alt={heroBakes[heroIndex].name} className="hero-loaf hero-swap absolute inset-0 h-full w-full object-cover" />
-            <div className="absolute right-4 top-4 grid size-24 rotate-6 place-items-center rounded-full bg-[#e9aa54] text-center text-xs font-black uppercase tracking-[.12em] shadow-xl sm:right-8 sm:top-8 sm:size-32">Baked<br />fresh<br />daily</div>
-            <p className="absolute bottom-5 left-5 rounded-full bg-[#fffaf1]/90 px-4 py-2 text-sm font-bold backdrop-blur sm:bottom-8 sm:left-8">{heroBakes[heroIndex].name} · ₹{heroBakes[heroIndex].price}</p>
-            <div className="absolute bottom-6 right-5 flex gap-2 sm:bottom-9 sm:right-8">{heroBakes.map((bake, index) => <button key={bake.name} onClick={() => setHeroIndex(index)} aria-label={`Show ${bake.name}`} aria-pressed={heroIndex === index} className={`h-3 rounded-full border border-[#321a10]/30 transition-all ${heroIndex === index ? "w-8 bg-[#321a10]" : "w-3 bg-white/80"}`} />)}</div>
+            <div className="absolute right-4 top-4 grid size-20 rotate-6 place-items-center rounded-full bg-[#e9aa54] text-center text-[10px] font-black uppercase tracking-[.12em] shadow-xl sm:right-8 sm:top-8 sm:size-32 sm:text-xs">Baked<br />fresh<br />daily</div>
+            <p className="absolute bottom-4 left-4 rounded-full bg-[#fffaf1]/90 px-3.5 py-1.5 text-xs font-bold backdrop-blur sm:bottom-8 sm:left-8 sm:px-4 sm:py-2 sm:text-sm">{heroBakes[heroIndex].name} · ₹{heroBakes[heroIndex].price}</p>
+            <div className="absolute bottom-4 right-4 flex gap-1.5 sm:bottom-9 sm:right-8 sm:gap-2">{heroBakes.map((bake, index) => <button key={bake.name} onClick={() => setHeroIndex(index)} aria-label={`Show ${bake.name}`} aria-pressed={heroIndex === index} className={`h-2.5 rounded-full border border-[#321a10]/30 transition-all sm:h-3 ${heroIndex === index ? "w-7 sm:w-8 bg-[#321a10]" : "w-2.5 sm:w-3 bg-white/80"}`} />)}</div>
           </div>
         </section>
 
-        <section className="overflow-hidden border-y border-[#321a10]/15 bg-[#d96a3b] py-10 text-[#fff8ee]">
-          <div className="mx-auto max-w-[1440px] px-5 text-center sm:px-8">
-            <p className="font-display text-[clamp(2rem,5vw,5rem)] leading-[1.08]">We believe good bread should be</p>
-            <div className="word-window mt-1 h-[1.1em] overflow-hidden font-display text-[clamp(2.4rem,6vw,6rem)] italic leading-[1.1] text-[#321a10]" aria-label="slow, honest and shared">
+        {/* 1. Directly the Swiping Marquee Section under Main Hero Photo */}
+        <section className="overflow-hidden border-y border-[#321a10]/15 bg-[#d96a3b] py-6 sm:py-10 text-[#fff8ee]">
+          <div className="mx-auto max-w-[1440px] px-4 text-center sm:px-8">
+            <p className="font-display text-[clamp(1.6rem,5vw,5rem)] leading-[1.08]">We believe good bread should be</p>
+            <div className="word-window mt-1 h-[1.1em] overflow-hidden font-display text-[clamp(2rem,6vw,6rem)] italic leading-[1.1] text-[#321a10]" aria-label="slow, honest and shared">
               <div className="word-roll"><span>slow.</span><span>honest.</span><span>shared.</span><span>slow.</span></div>
             </div>
           </div>
-          <div className="marquee-track mt-9 flex w-max gap-3" aria-label="Fresh bakery gallery">
-            {[...products, ...products].map((item, i) => <div key={`${item.id}-${i}`} className="relative h-36 w-52 shrink-0 overflow-hidden rounded-2xl sm:h-44 sm:w-64"><SmartImage src={item.image} alt={i < products.length ? item.name : ""} className="h-full w-full object-cover" /><span className="absolute inset-x-2 bottom-2 rounded-full bg-[#321a10]/80 px-3 py-1.5 text-center text-xs font-bold backdrop-blur">{item.name}</span></div>)}
+          <div className="marquee-track mt-6 sm:mt-9 flex w-max gap-3" aria-label="Fresh bakery gallery">
+            {[...products, ...products].map((item, i) => <div key={`${item.id}-${i}`} className="relative h-28 w-44 shrink-0 overflow-hidden rounded-2xl sm:h-44 sm:w-64"><SmartImage src={item.image} alt={i < products.length ? item.name : ""} className="h-full w-full object-cover" /><span className="absolute inset-x-2 bottom-2 rounded-full bg-[#321a10]/80 px-2.5 py-1 text-center text-[11px] font-bold backdrop-blur sm:px-3 sm:py-1.5 sm:text-xs">{item.name}</span></div>)}
           </div>
         </section>
 
-        <section id="collections" className="mx-auto max-w-[1440px] px-5 py-20 sm:px-8 lg:py-28">
-          <div className="mb-10 flex items-end justify-between gap-6"><div><p className="eyebrow">Shop by collection</p><h2 className="section-title">Choose your bake.</h2></div><p className="hidden font-display text-3xl font-bold sm:block">0{activeCollection + 1} <span className="text-[#b7a393]">/ 0{collections.length}</span></p></div>
-          <div ref={collectionRef} onScroll={syncCollection} className="no-scrollbar grid auto-cols-[88%] grid-flow-col gap-4 overflow-x-auto pb-3 sm:auto-cols-[62%] lg:auto-cols-[calc(50%-8px)]" aria-label="Bread collections">
+        {/* 2. Then the Scrolling Collection Section */}
+        <section id="collections" className="mx-auto max-w-[1440px] px-4 py-12 sm:px-8 lg:py-24">
+          <div className="mb-8 flex items-end justify-between gap-6"><div><p className="eyebrow">Shop by collection</p><h2 className="section-title">Choose your bake.</h2></div><p className="hidden font-display text-3xl font-bold sm:block">0{activeCollection + 1} <span className="text-[#b7a393]">/ 0{collections.length}</span></p></div>
+          <div ref={collectionRef} onScroll={syncCollection} className="no-scrollbar grid auto-cols-[80%] grid-flow-col gap-4 overflow-x-auto pb-3 sm:auto-cols-[62%] lg:auto-cols-[calc(50%-8px)]" aria-label="Bread collections">
             {collections.map((collection) => <button key={collection.name} onClick={() => chooseCollection(collection.filter)} className={`collection-card group relative overflow-hidden rounded-[1.6rem] text-left text-white ${collection.featured ? "sm:col-span-2 lg:col-span-2" : ""}`}>
-              <SmartImage src={collection.image} alt={collection.name} className="h-[420px] w-full object-cover transition duration-700 group-hover:scale-105 sm:h-[520px]" />
+              <SmartImage src={collection.image} alt={collection.name} className="h-[320px] sm:h-[420px] lg:h-[520px] w-full object-cover transition duration-700 group-hover:scale-105" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#28150d]/90 via-[#28150d]/10 to-transparent" />
-              {collection.featured && <span className="absolute left-5 top-5 rounded-full bg-[#e9aa54] px-4 py-2 text-xs font-black uppercase tracking-[.16em] text-[#321a10]">Featured collection</span>}
-              <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-5 sm:p-7">
-                <div><p className="font-display text-3xl font-bold sm:text-4xl">{collection.name}</p><p className="mt-1 text-sm text-white/80">{collection.count}</p></div>
-                <span className="grid size-12 shrink-0 place-items-center rounded-full bg-white text-[#321a10] transition group-hover:-rotate-12 group-hover:bg-[#e9aa54]"><Icon name="arrow" /></span>
+              {collection.featured && <span className="absolute left-4 top-4 sm:left-5 sm:top-5 rounded-full bg-[#e9aa54] px-3.5 py-1.5 text-xs font-black uppercase tracking-[.16em] text-[#321a10]">Featured collection</span>}
+              <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-4 sm:p-7">
+                <div><p className="font-display text-2xl font-bold sm:text-4xl">{collection.name}</p><p className="mt-1 text-xs sm:text-sm text-white/80">{collection.count}</p></div>
+                <span className="grid size-10 sm:size-12 shrink-0 place-items-center rounded-full bg-white text-[#321a10] transition group-hover:-rotate-12 group-hover:bg-[#e9aa54]"><Icon name="arrow" /></span>
               </div>
             </button>)}
           </div>
-          <div className="mt-6 flex items-center justify-between">
-            <div className="flex gap-2">{collections.map((item, index) => <button key={item.name} onClick={() => scrollCollections(index)} aria-label={`Go to ${item.name}`} aria-pressed={activeCollection === index} className={`h-2.5 rounded-full transition-all ${activeCollection === index ? "w-9 bg-[#d96a3b]" : "w-2.5 bg-[#321a10]/20"}`} />)}</div>
-            <p className="text-sm font-bold">Scroll to explore →</p>
+          <div className="mt-5 flex items-center justify-between">
+            <div className="flex gap-1.5">{collections.map((item, index) => <button key={item.name} onClick={() => scrollCollections(index)} aria-label={`Go to ${item.name}`} aria-pressed={activeCollection === index} className={`h-2 rounded-full transition-all ${activeCollection === index ? "w-8 bg-[#d96a3b]" : "w-2 bg-[#321a10]/20"}`} />)}</div>
+            <p className="text-xs sm:text-sm font-bold">Scroll to explore →</p>
           </div>
         </section>
 
-        <section id="shop" className="border-t border-[#321a10]/10 bg-[#fffaf1] py-20 lg:py-28">
-          <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
-            <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
+        {/* 3. Then the Products Section Beneath it (at least two horizontal on mobile, and rest vertically) */}
+        <section id="shop" className="border-t border-[#321a10]/10 bg-[#fffaf1] py-14 lg:py-28">
+          <div className="mx-auto max-w-[1440px] px-4 sm:px-8">
+            <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
               <div>
                 <p className="eyebrow">Today’s bake</p>
                 <h2 className="section-title">Fresh from the oven.</h2>
               </div>
-              <div className="flex flex-wrap items-center gap-3">
-                {/* Category filters */}
-                <div className="flex gap-1.5 sm:gap-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="flex gap-1.5 overflow-x-auto pb-1 max-w-full">
                   {["All", "Bread", "Pastry", "Pantry"].map((item) => (
                     <button 
                       key={item} 
                       onClick={() => setCategory(item)} 
                       aria-pressed={category === item} 
-                      className={`min-h-11 rounded-full border px-4 sm:px-5 text-sm font-bold transition-all ${
+                      className={`min-h-9 sm:min-h-11 rounded-full border px-3.5 sm:px-5 text-xs sm:text-sm font-bold transition-all ${
                         category === item 
                           ? "border-[#321a10] bg-[#321a10] text-white shadow-md" 
                           : "border-[#321a10]/20 bg-white/50 hover:bg-white"
@@ -453,77 +472,38 @@ export default function App() {
                     </button>
                   ))}
                 </div>
+              </div>
+            </div>
 
-                {/* View Mode Toggle: Grid (Vertical) vs Carousel (Horizontal) */}
-                <div className="flex rounded-full border border-[#321a10]/20 bg-white/80 p-1">
-                  <button 
-                    type="button"
-                    onClick={() => setViewMode("grid")}
-                    className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold transition-all ${
-                      viewMode === "grid" 
-                        ? "bg-[#321a10] text-white shadow-sm" 
-                        : "text-[#321a10]/70 hover:text-[#321a10]"
-                    }`}
-                    title="Vertical Grid view"
-                  >
-                    <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                      <rect x="3" y="3" width="7" height="7" rx="1.5" />
-                      <rect x="14" y="3" width="7" height="7" rx="1.5" />
-                      <rect x="14" y="14" width="7" height="7" rx="1.5" />
-                      <rect x="3" y="14" width="7" height="7" rx="1.5" />
-                    </svg>
-                    <span>Grid</span>
-                  </button>
-                  <button 
-                    type="button"
-                    onClick={() => setViewMode("rail")}
-                    className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold transition-all ${
-                      viewMode === "rail" 
-                        ? "bg-[#321a10] text-white shadow-sm" 
-                        : "text-[#321a10]/70 hover:text-[#321a10]"
-                    }`}
-                    title="Horizontal Scroll view"
-                  >
-                    <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                      <rect x="3" y="5" width="5" height="14" rx="1.5" />
-                      <rect x="10" y="5" width="5" height="14" rx="1.5" />
-                      <rect x="17" y="5" width="5" height="14" rx="1.5" />
-                    </svg>
-                    <span>Scroll</span>
-                  </button>
+            {/* Mobile View: At least two horizontal top picks, then the rest in a neat vertical list/grid */}
+            <div className="block md:hidden">
+              {/* Top 2 horizontal quick-picks */}
+              <div className="mb-6">
+                <p className="text-xs font-black uppercase tracking-wider text-[#d96a3b] mb-3">🔥 Morning's Top Picks</p>
+                <div className="no-scrollbar grid grid-flow-col auto-cols-[48%] gap-3 overflow-x-auto pb-2">
+                  {displayed.slice(0, 2).map((p) => (
+                    <ProductCard key={`h-${p.id}`} product={p} onAdd={add} onBuyNow={buyNow} />
+                  ))}
+                </div>
+              </div>
+
+              {/* Rest of the products presented vertically */}
+              <div>
+                <p className="text-xs font-black uppercase tracking-wider text-[#321a10] mb-3">All Daily Bakes ({displayed.length - 2 > 0 ? displayed.length - 2 : displayed.length})</p>
+                <div className="grid grid-cols-1 gap-4">
+                  {displayed.slice(2).map((p) => (
+                    <ProductCard key={`v-${p.id}`} product={p} onAdd={add} onBuyNow={buyNow} />
+                  ))}
                 </div>
               </div>
             </div>
 
-            {/* Products Layout */}
-            {viewMode === "grid" ? (
-              /* Vertical Grid Layout showing all products in full view */
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                {displayed.map((p) => (
-                  <ProductCard key={p.id} product={p} onAdd={add} onBuyNow={buyNow} />
-                ))}
-              </div>
-            ) : (
-              /* Horizontal Rail Layout */
-              <div>
-                <div ref={railRef} className="no-scrollbar grid auto-cols-[68%] grid-flow-col gap-4 overflow-x-auto pb-4 sm:auto-cols-[38%] md:auto-cols-[28%] lg:auto-cols-[22%] xl:auto-cols-[18.5%]">
-                  {displayed.map((p) => (
-                    <ProductCard key={p.id} product={p} onAdd={add} onBuyNow={buyNow} />
-                  ))}
-                </div>
-                <div className="mt-7 flex items-center justify-between">
-                  <p className="text-xs font-bold text-[#6b5549]">Scroll to see all {displayed.length} daily bakes →</p>
-                  <div className="flex gap-2">
-                    <button onClick={() => scrollProducts(-1)} className="grid size-12 rotate-180 place-items-center rounded-full border border-[#321a10]/25 hover:bg-white" aria-label="Previous products">
-                      <Icon name="arrow" />
-                    </button>
-                    <button onClick={() => scrollProducts(1)} className="grid size-12 place-items-center rounded-full bg-[#321a10] text-white hover:bg-[#d96a3b]" aria-label="Next products">
-                      <Icon name="arrow" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
+            {/* Desktop View: Full Responsive Grid */}
+            <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+              {displayed.map((p) => (
+                <ProductCard key={p.id} product={p} onAdd={add} onBuyNow={buyNow} />
+              ))}
+            </div>
           </div>
         </section>
 
@@ -602,22 +582,29 @@ export default function App() {
 
                   <div className="mt-auto pt-6">
                     <p className="font-display text-5xl font-black">{plan.price}<span className="font-sans text-sm font-normal"> / delivery</span></p>
-                    <button 
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedPlanIndex(index);
-                      }} 
-                      className={`mt-6 flex w-full min-h-14 items-center justify-between rounded-full px-6 font-bold transition-all ${
-                        isSelected 
-                          ? "bg-[#d96a3b] text-white shadow-lg" 
-                          : plan.featured 
-                            ? "bg-[#e9aa54] text-[#321a10]" 
-                            : "bg-[#321a10] text-white"
-                      }`}
-                    >
-                      {isSelected ? "Active Plan ✓" : "Choose this plan"} <Icon name="arrow" />
-                    </button>
+                    <div className="mt-6 flex flex-col gap-2">
+                      <a 
+                        href={`https://wa.me/919820046786?text=${encodeURIComponent(
+                          `Hi Grain Mother! I'd like to subscribe to "${plan.name}" (${plan.price}/delivery).\n\nDetails:\n• Plan: ${plan.name}\n• Frequency: ${plan.detail}\n• Items: ${plan.breadName}\n• Perk: ${plan.perk}\n\nPlease confirm my subscription delivery schedule.`
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedPlanIndex(index);
+                        }} 
+                        className={`flex w-full min-h-14 items-center justify-between rounded-full px-6 font-bold transition-all shadow-md ${
+                          isSelected 
+                            ? "bg-[#d96a3b] text-white hover:bg-[#b94f29]" 
+                            : plan.featured 
+                              ? "bg-[#e9aa54] text-[#321a10] hover:bg-[#dba047]" 
+                              : "bg-[#321a10] text-white hover:bg-[#482819]"
+                        }`}
+                      >
+                        <span>{isSelected ? "Subscribe with WhatsApp ✓" : "Subscribe Now"}</span>
+                        <Icon name="arrow" />
+                      </a>
+                    </div>
                   </div>
                 </article>
               );
