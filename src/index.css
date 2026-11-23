@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght,SOFT,WONK@9..144,400..900,0..100,0..1&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: "DM Sans", sans-serif;
+  --font-display: "Fraunces", serif;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body { background: #f7f1e7; color: #321a10; font-family: "DM Sans", sans-serif; }
+  button, a { -webkit-tap-highlight-color: transparent; }
+  :focus-visible { outline: 2px solid #d96a3b; outline-offset: 3px; }
+}
+
+@layer components {
+  .font-display { font-family: "Fraunces", serif; }
+  .section-title { font-family: "Fraunces", serif; font-size: clamp(2.2rem, 6vw, 5.5rem); font-weight: 800; letter-spacing: -.045em; line-height: .98; }
+  .eyebrow { margin-bottom: 0.75rem; font-size: .75rem; font-weight: 800; letter-spacing: .22em; text-transform: uppercase; color: #c8522b; }
+  .nav-link { position: relative; min-height: 44px; display: inline-flex; align-items: center; }
+  .nav-link::after { content: ""; position: absolute; right: 0; bottom: 7px; left: 0; height: 2px; background: #d96a3b; transform: scaleX(0); transform-origin: right; transition: transform .3s ease; }
+  .nav-link:hover::after { transform: scaleX(1); transform-origin: left; }
+  .image-fallback { display: grid; place-items: center; background: #e6caa6; color: #8e492d; font-family: "Fraunces", serif; font-weight: 800; text-align: center; }
+}
+
+.hero-visual::before {
+  content: ""; position: absolute; z-index: 1; inset: 0; pointer-events: none;
+  background: linear-gradient(145deg, transparent 50%, rgba(68, 31, 13, .15));
+}
+.hero-loaf { animation: hero-breathe 8s ease-in-out infinite alternate; }
+.hero-swap { animation: hero-swap .7s cubic-bezier(.22,1,.36,1), hero-breathe 8s .7s ease-in-out infinite alternate; }
+.word-roll { display: flex; flex-direction: column; animation: word-roll 8s cubic-bezier(.65,0,.35,1) infinite; }
+.word-roll span { height: 1.1em; flex: 0 0 1.1em; }
+.marquee-track { animation: marquee 32s linear infinite; }
+.marquee-track:hover { animation-play-state: paused; }
+.announcement-track { animation: announcement-marquee 25s linear infinite; }
+.announcement-bar:hover .announcement-track { animation-play-state: paused; }
+.cart-panel { position: relative; isolation: isolate; animation: drawer-in .38s cubic-bezier(.22,1,.36,1); }
+.cart-panel::before {
+  content: ""; position: absolute; z-index: 0; inset: 0; opacity: .11; pointer-events: none;
+  background: url("/assets/hero-sourdough.png") center 40% / 150% auto no-repeat;
+  animation: cart-bread 10s ease-in-out infinite alternate;
+}
+.no-scrollbar { scrollbar-width: none; scroll-snap-type: x mandatory; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.bread-cursor { display: none; }
+
+@keyframes hero-breathe { from { transform: scale(1.01) rotate(-.3deg); } to { transform: scale(1.07) rotate(.4deg); } }
+@keyframes hero-swap { from { opacity: 0; transform: scale(1.1); filter: blur(10px); } to { opacity: 1; transform: scale(1.01); filter: blur(0); } }
+@keyframes word-roll { 0%,20% { transform: translateY(0); } 30%,50% { transform: translateY(-1.1em); } 60%,80% { transform: translateY(-2.2em); } 90%,100% { transform: translateY(-3.3em); } }
+@keyframes marquee { to { transform: translateX(calc(-50% - .5rem)); } }
+@keyframes announcement-marquee { to { transform: translateX(-50%); } }
+@keyframes drawer-in { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@keyframes cart-bread { from { transform: scale(1) rotate(-3deg); } to { transform: scale(1.12) rotate(3deg); } }
+
+@media (max-width: 640px) {
+  .hero-grid { min-height: auto; padding-top: 1.25rem; padding-bottom: 1.5rem; }
+  .hero-visual { order: -1; min-height: 320px; }
+  .section-title { font-size: clamp(2rem, 8vw, 3rem); line-height: 1.02; }
+}
+
+@media (pointer: fine) {
+  body, a, button, select { cursor: none; }
+  .bread-cursor {
+    display: block; position: fixed; z-index: 100; left: 0; top: 0; width: 40px; height: 29px;
+    pointer-events: none; border-radius: 48% 52% 45% 55%; background: #b9652d;
+    border: 2px solid #6e351b; box-shadow: inset 0 0 0 3px #d99758, 0 4px 9px #321a1040;
+    transition: width .18s ease, height .18s ease, filter .18s ease;
+  }
+  .bread-cursor::before, .bread-cursor::after, .bread-cursor span {
+    content: ""; position: absolute; top: 7px; width: 2px; height: 13px; border-radius: 99px;
+    background: #f2ca8e; transform: rotate(32deg);
+  }
+  .bread-cursor::before { left: 11px; }
+  .bread-cursor span { left: 19px; }
+  .bread-cursor::after { left: 27px; }
+  .bread-cursor.is-hovering { width: 50px; height: 36px; filter: brightness(1.12); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+/* Subscription Character Bread Animations */
+@keyframes bread-bounce {
+  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+  50% { transform: translateY(-7px) rotate(-2deg) scale(1.04); }
+}
+
+@keyframes crown-float {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-4px) rotate(4deg) scale(1.08); }
+}
+
+@keyframes cape-flutter {
+  0%, 100% { transform: scaleX(1) skewY(0deg); }
+  50% { transform: scaleX(1.15) skewY(-5deg) translateY(-2px); }
+}
+
+.animate-bread-bounce {
+  animation: bread-bounce 3.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-crown-float {
+  animation: crown-float 2.5s ease-in-out infinite alternate;
+  transform-origin: bottom center;
+}
+
+.animate-cape-flutter {
+  animation: cape-flutter 1.8s ease-in-out infinite alternate;
+  transform-origin: top left;
+}
